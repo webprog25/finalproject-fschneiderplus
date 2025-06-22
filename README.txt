@@ -2,12 +2,16 @@
 Final Project
 ====================
 
-Project Title: <TODO>
-Your Name: <TODO>
+Project Title: Better ZAMG
+Your Name: Frank Schneider
 
 Overview
 --------
-<TODO: A short description of your project and what it does.>
+Redo the ZAMG site / new Geosphere site to be more useable.
+
+Loading the available data from ZAMG to a mongo database and make a site, which is better than the current Geosphere site, which i hate with a passion.
+
+We want realtime actualization for the datapoints as i hate reloading the geosphere site to know the current temperature.
 
 Running
 -------
@@ -15,9 +19,13 @@ Running
 
 Do I need to load data from init_db.mongodb? <TODO: Yes/No>
 
+It is planned to just run the docker container.
+
 Features
 --------
-<TODO: This doesn't have to be a comprehensive list. But if there's anything I should definitely try or might miss, this is a good place to let me know about that.>
+Realtime Graphing for all Available Temperature Sensing Stations.
+Choosable Location for Temperature.
+Forecasts
 
 Collaboration and libraries
 ---------------------------
