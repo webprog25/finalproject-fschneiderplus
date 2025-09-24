@@ -1,13 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
-    <title>Final Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Austria Weather Map</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Austria Weather Map</h1>
+            <div class="controls">
+                <div class="overlay-controls">
+                    <label for="overlaySelect">Weather Data:</label>
+                    <select id="overlaySelect">
+                        <option value="temperature">Temperature (°C)</option>
+                        <option value="humidity">Humidity (%)</option>
+                        <option value="wind_speed">Wind Speed (m/s)</option>
+                        <option value="air_pressure">Air Pressure (hPa)</option>
+                        <option value="rainfall">Rainfall (mm)</option>
+                    </select>
+                </div>
+                <div class="action-controls">
+                    <button id="refreshBtn" class="btn btn-primary">
+                        <span class="btn-icon">🔄</span>
+                        Refresh Data
+                    </button>
+                    <button id="toggleInfo" class="btn btn-secondary">
+                        <span class="btn-icon">📊</span>
+                        Toggle Info
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <main class="app-main">
+            <div class="map-container">
+                <div id="map" class="weather-map"></div>
+                <div class="map-legend" id="mapLegend">
+                    <h3>Legend</h3>
+                    <div class="legend-content">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #0066cc;"></div>
+                            <span>Cold/Low</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #00cc66;"></div>
+                            <span>Moderate</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ffcc00;"></div>
+                            <span>Warm/High</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ff6600;"></div>
+                            <span>Hot/Very High</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="loading-spinner"></div>
+                    <p>Loading weather data...</p>
+                </div>
+            </div>
+            
+            <aside class="weather-info" id="weatherInfo">
+                <div class="info-header">
+                    <h2>Weather Station Info</h2>
+                    <button id="closeInfo" class="close-btn">&times;</button>
+                </div>
+                
+                <section class="station-details">
+                    <h3>Station Details</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="label">Location:</span>
+                            <span id="stationLocation">Select a station</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">State:</span>
+                            <span id="stationState">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Altitude:</span>
+                            <span id="stationAltitude">--</span> m
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Last Updated:</span>
+                            <span id="lastUpdated">--</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="current-weather">
+                    <h3>Current Conditions</h3>
+                    <div class="weather-grid">
+                        <div class="weather-metric">
+                            <div class="metric-icon">🌡️</div>
+                            <div class="metric-data">
+                                <div class="metric-value" id="currentTemp">--</div>
+                                <div class="metric-label">Temperature (°C)</div>
+                            </div>
+                        </div>
+                        <div class="weather-metric">
+                            <div class="metric-icon">💧</div>
+                            <div class="metric-data">
+                                <div class="metric-value" id="currentHumidity">--</div>
+                                <div class="metric-label">Humidity (%)</div>
+                            </div>
+                        </div>
+                        <div class="weather-metric">
+                            <div class="metric-icon">💨</div>
+                            <div class="metric-data">
+                                <div class="metric-value" id="currentWind">--</div>
+                                <div class="metric-label">Wind Speed (m/s)</div>
+                            </div>
+                        </div>
+                        <div class="weather-metric">
+                            <div class="metric-icon">📊</div>
+                            <div class="metric-data">
+                                <div class="metric-value" id="currentPressure">--</div>
+                                <div class="metric-label">Pressure (hPa)</div>
+                            </div>
+                        </div>
+                        <div class="weather-metric">
+                            <div class="metric-icon">🌧️</div>
+                            <div class="metric-data">
+                                <div class="metric-value" id="currentRainfall">--</div>
+                                <div class="metric-label">Rainfall (mm)</div>
+                            </div>
+                        </div>
+                        <div class="weather-metric">
+                            <div class="metric-icon">☀️</div>
+                            <div class="metric-data">
+                                <div class="metric-value" id="currentSun">--</div>
+                                <div class="metric-label">Solar (W/m²)</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="statistics">
+                    <h3>Statistics</h3>
+                    <div id="weatherStats">
+                        <div class="stat-item">
+                            <span class="stat-label">Total Stations:</span>
+                            <span id="totalStations">--</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Average Temperature:</span>
+                            <span id="avgTemp">--</span>°C
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Average Humidity:</span>
+                            <span id="avgHumidity">--</span>%
+                        </div>
+                    </div>
+                </section>
+            </aside>
+        </main>
+        
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>&copy; 2025 Austria Weather Map | Data provided by <a href="https://techweb.at" target="_blank">TechWeb API</a></p>
+                <div class="footer-info">
+                    <span id="dataTimestamp">Last updated: --</span>
+                </div>
+            </div>
+        </footer>
+    </div>
 
-    <!-- This line provides automatic page and style reloading when files change -->
-    <script type="module" src="/lib/client/updater.js"></script>
-  </head>
-  <body>
-    <h1>Hello, world!</h1>
-  </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
 </html>
